@@ -1,6 +1,6 @@
 {
   "name": "graphiql-schema-search",
-  "version": "0.0.7",
+  "version": "1.0.0",
   "description": "Schema search for GraphiQL",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
