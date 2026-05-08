@@ -1,12 +1,5 @@
-// Schema Search Plugin — main content component.
-//
-// Two views: a search/browse list (default) and a type detail view (when a type is selected).
-// URL hash is used as the source of truth for navigation state, enabling deep-linking and
-// browser back/forward support within the plugin panel.
-
 import { useGraphiQL } from '@graphiql/react';
 import type { GraphQLSchema } from 'graphql';
-import { Div, Span } from 'lemon-reset';
 import React, { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 
 import { useSchemaSearchConfig } from './config';
@@ -26,9 +19,7 @@ import { VirtualList } from './VirtualList';
 
 export const DEBOUNCE_MS = 200;
 
-// Filter chips for narrowing results by GraphQL type kind.
 const KIND_FILTERS = ['Object', 'Input', 'Enum', 'Interface', 'Union', 'Scalar'];
-// Filter chips for narrowing results by result section (only shown during active search).
 const SECTION_FILTERS = [
     { key: 'root', label: 'Root Operations' },
     { key: 'types', label: 'Types' },
@@ -39,11 +30,12 @@ function formatCount(n: number): string {
     return n.toLocaleString();
 }
 
-// When a type is selected, it's either just the type name (string) or a deep-link
-// to a specific field within a type ({ typeName, fieldName }).
+function cx(...classes: (string | false | null | undefined)[]): string {
+    return classes.filter(Boolean).join(' ');
+}
+
 type SelectedType = string | { typeName: string; fieldName: string } | null;
 
-// Discriminated union for rows rendered in the virtual list.
 type FlatItem =
     | { rowKind: 'section-header'; label: string }
     | { rowKind: 'type-result'; name: string; kind: string }
@@ -53,9 +45,6 @@ export function SchemaSearchContent() {
     const schema = useGraphiQL(state => state.schema) as GraphQLSchema | null | undefined;
     const { hashPrefix } = useSchemaSearchConfig();
 
-    // Restore UI state from the URL hash on first mount. On subsequent mounts
-    // (plugin re-opened), read the live hash; on initial page load, use the
-    // captured-at-module-load INITIAL_HASH since React effects may have cleared it.
     const [initialNav] = useState(() => {
         if (hasInitializedHistory()) {
             return decodeNavHash(window.location.hash, hashPrefix);
@@ -75,7 +64,6 @@ export function SchemaSearchContent() {
         return null;
     });
 
-    // Debounce search query
     useEffect(() => {
         const timer = setTimeout(() => {
             setDebouncedQuery(query);
@@ -83,9 +71,6 @@ export function SchemaSearchContent() {
         return () => clearTimeout(timer);
     }, [query]);
 
-    // Sync search/filter state to URL hash as the user types or toggles filters.
-    // Skips the first render (state was just restored FROM the hash) and skips when
-    // a type detail view is active (that has its own hash via navigateToType).
     const isFirstRender = useRef(true);
     useEffect(() => {
         if (isFirstRender.current) {
@@ -107,15 +92,10 @@ export function SchemaSearchContent() {
         return searchIndex(index, debouncedQuery, kindFilter);
     }, [index, debouncedQuery, kindFilter]);
 
-    // Set up browser history integration on first mount.
-    // Creates a "base" history entry (depth 0) so back-navigation can return to
-    // the search list. Then listens for popstate to restore component state from
-    // the URL hash when the user hits back/forward.
     useEffect(() => {
         if (!hasInitializedHistory()) {
             setInitializedHistory(true);
             if (window.location.hash) {
-                // Page loaded with a deep-link hash — create a base entry behind it.
                 const currentHash = window.location.hash;
                 window.history.replaceState({ schemaSearchDepth: 0 }, '', window.location.pathname);
                 window.history.pushState({ schemaSearchDepth: 1 }, '', currentHash);
@@ -124,7 +104,6 @@ export function SchemaSearchContent() {
                 window.history.replaceState({ schemaSearchDepth: 0 }, '', window.location.pathname);
             }
         }
-        // Update internal state any time history.go(), history.back(), or history.forward() is called
         const onPopState = () => {
             const nav = decodeNavHash(undefined, hashPrefix);
             if (nav.typeName) {
@@ -141,9 +120,6 @@ export function SchemaSearchContent() {
         return () => window.removeEventListener('popstate', onPopState);
     }, []);
 
-    // Navigate into a type detail view. Pushes a new history entry so the user
-    // can go back. If we're already viewing this exact type+field, replace instead
-    // to avoid duplicate history entries.
     const navigateToType = useCallback((typeName: string, fieldName?: string) => {
         const current = decodeNavHash(undefined, hashPrefix);
         if (current.typeName === typeName && current.fieldName === (fieldName || null)) {
@@ -158,10 +134,7 @@ export function SchemaSearchContent() {
         window.history.back();
     }, []);
 
-    // Called by TypeDetailView when the user scrolls to or selects a field.
-    // Updates the URL hash to reflect the currently-visible field for deep-linking.
     const onFieldSelect = useCallback(
-        // istanbul ignore next -- tested via TypeDetailView integration; callback not invoked through SchemaSearchContent tests
         (fieldName: string | null) => {
             const current = decodeNavHash(undefined, hashPrefix);
             const typeName = current.typeName;
@@ -183,19 +156,12 @@ export function SchemaSearchContent() {
 
     const isSearchMode = debouncedQuery.trim().length > 0;
 
-    // Kind filters (Object, Enum, etc.) only apply to the "Types" section.
-    // When entering search mode showing all sections, clear the kind filter
-    // to avoid confusingly hiding results from other sections.
     useEffect(() => {
         if (isSearchMode && sectionFilter !== 'types') {
             setKindFilter(null);
         }
     }, [isSearchMode, sectionFilter]);
 
-    // Flatten search results into a single list with section headers interleaved.
-    // In browse mode (no query), only types are shown. In search mode, results are
-    // grouped into Types / Root Operations / Fields sections, each gated by the
-    // active section filter.
     const flatItems: FlatItem[] = useMemo(() => {
         if (!index) return [];
         const items: FlatItem[] = [];
@@ -230,26 +196,24 @@ export function SchemaSearchContent() {
     const renderItem = useCallback(
         (item: FlatItem) => {
             if (item.rowKind === 'section-header') {
-                return <Div css={styles.sectionHeader}>{item.label}</Div>;
+                return <div className={styles.sectionHeader}>{item.label}</div>;
             }
             if (item.rowKind === 'type-result') {
                 return (
-                    <Div css={styles.item} onClick={() => navigateToType(item.name)}>
-                        <Span css={styles.itemName}>{item.name}</Span>
-                        <Span css={styles.itemKind}>{item.kind}</Span>
-                    </Div>
+                    <div className={styles.item} onClick={() => navigateToType(item.name)}>
+                        <span className={styles.itemName}>{item.name}</span>
+                        <span className={styles.itemKind}>{item.kind}</span>
+                    </div>
                 );
             }
-            // istanbul ignore else -- exhaustive, all rowKinds handled above
             if (item.rowKind === 'field-result') {
                 return (
-                    <Div css={styles.item} onClick={() => navigateToType(item.typeName, item.fieldName)}>
-                        <Span css={styles.itemTypePrefix}>{`${item.typeName}.`}</Span>
-                        <Span css={styles.itemName}>{item.fieldName}</Span>
-                    </Div>
+                    <div className={styles.item} onClick={() => navigateToType(item.typeName, item.fieldName)}>
+                        <span className={styles.itemTypePrefix}>{`${item.typeName}.`}</span>
+                        <span className={styles.itemName}>{item.fieldName}</span>
+                    </div>
                 );
             }
-            // istanbul ignore next
             return null;
         },
         [navigateToType],
@@ -263,13 +227,12 @@ export function SchemaSearchContent() {
 
     if (!schema || !index) {
         return (
-            <Div css={styles.schemaSearch}>
-                <Div css={styles.noResults}>Loading schema...</Div>
-            </Div>
+            <div className={styles.schemaSearch}>
+                <div className={styles.noResults}>Loading schema...</div>
+            </div>
         );
     }
 
-    // When a type is selected, render the detail view instead of the search list.
     if (selectedType) {
         const isDeepLink = typeof selectedType === 'object';
         const typeName = isDeepLink ? selectedType.typeName : selectedType;
@@ -289,54 +252,53 @@ export function SchemaSearchContent() {
     }
 
     return (
-        <Div css={styles.schemaSearch}>
-            <Div css={styles.header}>
+        <div className={styles.schemaSearch}>
+            <div className={styles.header}>
                 <input
-                    css={styles.input}
+                    className={styles.input}
                     placeholder="Search types and fields..."
                     value={query}
                     onChange={e => setQuery(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    // eslint-disable-next-line jsx-a11y/no-autofocus -- this is the primary input in a dev-tools panel
                     autoFocus
                 />
-            </Div>
+            </div>
             {isSearchMode && (
-                <Div css={styles.filters}>
+                <div className={styles.filters}>
                     {SECTION_FILTERS.map(sf => (
                         <button
                             type="button"
                             key={sf.key}
-                            css={[styles.filterChip, sectionFilter === sf.key && styles.filterChipActive]}
+                            className={cx(styles.filterChip, sectionFilter === sf.key && styles.filterChipActive)}
                             onClick={() => setSectionFilter(sectionFilter === sf.key ? null : sf.key)}
                         >
                             {sf.label}
                         </button>
                     ))}
-                </Div>
+                </div>
             )}
             {(!isSearchMode || sectionFilter === 'types') && (
-                <Div css={styles.filters}>
+                <div className={styles.filters}>
                     {KIND_FILTERS.map(kind => (
                         <button
                             type="button"
                             key={kind}
-                            css={[styles.filterChip, kindFilter === kind && styles.filterChipActive]}
+                            className={cx(styles.filterChip, kindFilter === kind && styles.filterChipActive)}
                             onClick={() => setKindFilter(kindFilter === kind ? null : kind)}
                         >
                             {kind}
                         </button>
                     ))}
-                </Div>
+                </div>
             )}
-            <Div css={styles.count}>{countText}</Div>
-            <Div css={styles.results}>
+            <div className={styles.count}>{countText}</div>
+            <div className={styles.results}>
                 {flatItems.length > 0 ? (
                     <VirtualList items={flatItems} renderItem={renderItem} />
                 ) : (
-                    <Div css={styles.noResults}>No results found</Div>
+                    <div className={styles.noResults}>No results found</div>
                 )}
-            </Div>
-        </Div>
+            </div>
+        </div>
     );
 }

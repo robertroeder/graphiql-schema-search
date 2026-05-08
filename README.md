@@ -14,7 +14,6 @@ This package requires the following peer dependencies in your project:
 
 - `react` >= 17
 - `react-dom` >= 17
-- `@emotion/react` >= 11
 - `@graphiql/react` >= 0.20
 - `graphql` >= 15
 

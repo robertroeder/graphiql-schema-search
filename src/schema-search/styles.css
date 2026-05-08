@@ -1,0 +1,325 @@
+.gss-schemaSearch {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    font-family: var(--font-family, system-ui, -apple-system, sans-serif);
+    font-size: var(--font-size-body, 13px);
+    color: var(--color-neutral-60, hsla(var(--color-neutral), 0.6));
+}
+
+.gss-header {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--color-neutral-15, hsla(var(--color-neutral), 0.15));
+}
+
+.gss-input {
+    width: 100%;
+    padding: 6px 8px;
+    border: 1px solid var(--color-neutral-30, hsla(var(--color-neutral), 0.3));
+    border-radius: 4px;
+    background: var(--color-base, transparent);
+    color: inherit;
+    font-size: inherit;
+    font-family: inherit;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.gss-input:focus {
+    border-color: var(--color-primary, hsl(var(--color-primary)));
+}
+
+.gss-input::placeholder {
+    color: var(--color-neutral-40, hsla(var(--color-neutral), 0.4));
+}
+
+.gss-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 6px 12px;
+    border-bottom: 1px solid var(--color-neutral-15, hsla(var(--color-neutral), 0.15));
+}
+
+.gss-filterChip {
+    padding: 2px 8px;
+    border: 1px solid var(--color-neutral-30, hsla(var(--color-neutral), 0.3));
+    border-radius: 12px;
+    background: hsl(var(--color-base));
+    color: var(--color-neutral-60, hsla(var(--color-neutral), 0.6));
+    font-size: 11px;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.gss-filterChip:hover {
+    background: var(--color-neutral-10, hsla(var(--color-neutral), 0.1));
+}
+
+.gss-filterChipActive {
+    background: var(--color-neutral-60, hsla(var(--color-neutral), 0.6));
+    color: hsl(var(--color-base));
+    border-color: hsl(var(--color-base));
+    font-weight: 600;
+}
+
+.gss-filterChipActive:hover {
+    background: var(--color-neutral-60, hsla(var(--color-neutral), 0.6));
+}
+
+.gss-results {
+    flex: 1 1 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.gss-sectionHeader {
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-neutral-40, hsla(var(--color-neutral), 0.4));
+    background: var(--color-neutral-05, hsla(var(--color-neutral), 0.05));
+    flex-shrink: 0;
+}
+
+.gss-argsHeader {
+    padding: 10px 0 4px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-neutral-40, hsla(var(--color-neutral), 0.4));
+}
+
+.gss-item {
+    display: flex;
+    align-items: center;
+    padding: 4px 12px;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.gss-item:hover {
+    background: var(--color-neutral-10, hsla(var(--color-neutral), 0.1));
+}
+
+.gss-itemName {
+    font-weight: 500;
+    color: var(--color-neutral-80, hsla(var(--color-neutral), 0.8));
+}
+
+.gss-itemTypePrefix {
+    color: var(--color-neutral-40, hsla(var(--color-neutral), 0.4));
+    margin-right: 2px;
+}
+
+.gss-itemKind {
+    margin-left: auto;
+    padding-left: 8px;
+    font-size: 11px;
+    color: var(--color-neutral-30, hsla(var(--color-neutral), 0.3));
+    flex-shrink: 0;
+}
+
+.gss-detail {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.gss-detailHeader {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--color-neutral-15, hsla(var(--color-neutral), 0.15));
+}
+
+.gss-backBtn {
+    background: none;
+    border: none;
+    color: var(--color-primary, hsl(var(--color-primary)));
+    cursor: pointer;
+    padding: 0;
+    font-size: inherit;
+    font-family: inherit;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.gss-backBtn:hover {
+    text-decoration: underline;
+}
+
+.gss-typeName {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-neutral-80, hsla(var(--color-neutral), 0.8));
+}
+
+.gss-typeKindBadge {
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--color-neutral-40, hsla(var(--color-neutral), 0.4));
+    margin-left: 8px;
+    user-select: none;
+}
+
+.gss-typeImplements {
+    font-size: 12px;
+    color: var(--color-neutral-40, hsla(var(--color-neutral), 0.4));
+    margin-top: 4px;
+}
+
+.gss-typeDescription {
+    padding: 8px 12px 12px;
+    font-size: 12px;
+    color: var(--color-neutral-50, hsla(var(--color-neutral), 0.5));
+    border-bottom: 1px solid var(--color-neutral-15, hsla(var(--color-neutral), 0.15));
+}
+
+.gss-fieldItem {
+    padding: 6px 12px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-sizing: border-box;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.gss-fieldItem:hover {
+    background: var(--color-neutral-10, hsla(var(--color-neutral), 0.1));
+}
+
+.gss-fieldItemExpanded {
+    background: var(--color-neutral-05, hsla(var(--color-neutral), 0.05));
+    overflow-y: auto;
+    box-shadow: inset 3px 0 0 0 var(--color-neutral-05, hsla(var(--color-neutral), 0.3));
+}
+
+.gss-fieldItemRow {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.gss-fieldItemDesc {
+    font-size: 11px;
+    color: var(--color-neutral-40, hsla(var(--color-neutral), 0.4));
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.gss-fieldName {
+    font-weight: 500;
+    color: var(--color-neutral-80, hsla(var(--color-neutral), 0.8));
+}
+
+.gss-fieldArgs {
+    color: var(--color-neutral-40, hsla(var(--color-neutral), 0.4));
+    font-size: 12px;
+}
+
+.gss-fieldReturn {
+    color: var(--color-primary, hsl(var(--color-primary)));
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.gss-fieldReturn:hover {
+    text-decoration: underline;
+}
+
+.gss-fieldDefault {
+    color: var(--color-neutral-40, hsla(var(--color-neutral), 0.4));
+    font-size: 12px;
+}
+
+.gss-noResults {
+    padding: 24px 12px;
+    text-align: center;
+    color: var(--color-neutral-40, hsla(var(--color-neutral), 0.4));
+}
+
+.gss-count {
+    padding: 4px 12px;
+    font-size: 11px;
+    color: var(--color-neutral-40, hsla(var(--color-neutral), 0.4));
+    flex-shrink: 0;
+}
+
+.gss-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--color-neutral-15, hsla(var(--color-neutral), 0.15));
+    flex-shrink: 0;
+    margin-bottom: 8px;
+}
+
+.gss-tab {
+    padding: 6px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--color-neutral-40, hsla(var(--color-neutral), 0.4));
+    font-family: inherit;
+}
+
+.gss-tab:hover {
+    color: var(--color-neutral-60, hsla(var(--color-neutral), 0.6));
+}
+
+.gss-tabActive {
+    color: var(--color-neutral-80, hsla(var(--color-neutral), 0.8));
+    border-bottom-color: var(--color-primary, hsl(var(--color-primary)));
+}
+
+.gss-enumValue {
+    padding: 4px 12px;
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: var(--color-neutral-60, hsla(var(--color-neutral), 0.6));
+    overflow: hidden;
+}
+
+.gss-possibleType {
+    padding: 4px 12px;
+    height: 100%;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: var(--color-primary, hsl(var(--color-primary)));
+}
+
+.gss-possibleType:hover {
+    text-decoration: underline;
+    background: var(--color-neutral-10, hsla(var(--color-neutral), 0.1));
+}
+
+.gss-fieldDetailArgs {
+    padding-bottom: 8px;
+}
+
+.gss-fieldDetailArg {
+    padding: 6px 12px 2px;
+}
+
+.gss-fieldDetailArgDesc {
+    padding: 2px 0 4px;
+    font-size: 11px;
+    color: var(--color-neutral-40, hsla(var(--color-neutral), 0.4));
+}

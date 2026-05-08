@@ -9,7 +9,6 @@ export default defineConfig({
   external: [
     'react',
     'react-dom',
-    '@emotion/react',
     '@graphiql/react',
     'graphql',
   ],
