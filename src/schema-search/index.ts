@@ -3,20 +3,14 @@ import React from 'react';
 
 import { SchemaSearchConfigContext, type SchemaSearchConfig } from './config';
 import { SchemaSearchContent } from './SchemaSearchContent';
-import { SchemaSearchIcon } from './SchemaSearchIcon';
-import { hasSchemaSearchHash } from './navigation';
+import { createSchemaSearchIcon } from './SchemaSearchIcon';
 
-export interface SchemaSearchResult {
-    plugin: GraphiQLPlugin;
-    isSchemaSearchActive: () => boolean;
-}
-
-export function getSchemaSearchPlugin(hashPrefix = ''): SchemaSearchResult {
+export function getSchemaSearchPlugin(hashPrefix = ''): GraphiQLPlugin {
     const config: SchemaSearchConfig = { hashPrefix };
 
-    const plugin: GraphiQLPlugin = {
+    return {
         title: 'Schema Search',
-        icon: SchemaSearchIcon,
+        icon: createSchemaSearchIcon(hashPrefix),
         content: () =>
             React.createElement(
                 SchemaSearchConfigContext.Provider,
@@ -24,11 +18,4 @@ export function getSchemaSearchPlugin(hashPrefix = ''): SchemaSearchResult {
                 React.createElement(SchemaSearchContent),
             ),
     };
-
-    const isSchemaSearchActive = (): boolean => {
-        if (typeof window === 'undefined') return false;
-        return hasSchemaSearchHash(window.location.hash, hashPrefix);
-    };
-
-    return { plugin, isSchemaSearchActive };
 }

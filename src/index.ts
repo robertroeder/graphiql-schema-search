@@ -1,1 +1,1 @@
-export { getSchemaSearchPlugin, type SchemaSearchResult } from './schema-search';
+export { getSchemaSearchPlugin } from './schema-search';

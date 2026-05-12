@@ -23,24 +23,21 @@ This package requires the following peer dependencies in your project:
 import { getSchemaSearchPlugin } from 'graphiql-schema-search';
 import 'graphiql-schema-search/dist/index.css';
 
-const { plugin, isSchemaSearchActive } = getSchemaSearchPlugin();
+const schemaSearch = getSchemaSearchPlugin();
 
 function App() {
-  return (
-    <GraphiQL
-      plugins={[plugin]}
-      visiblePlugin={isSchemaSearchActive() ? plugin : undefined}
-    />
-  );
+  return <GraphiQL plugins={[schemaSearch]} />;
 }
 ```
+
+The plugin automatically activates itself when the URL hash contains schema search parameters (e.g. deep-links).
 
 ### Hash prefix
 
 If you need to namespace the URL hash parameters (e.g. to avoid collisions with other tools), pass a prefix:
 
 ```tsx
-const { plugin, isSchemaSearchActive } = getSchemaSearchPlugin('myprefix_');
+const schemaSearch = getSchemaSearchPlugin('myprefix_');
 // Hash params will be: #myprefix_type=Query&myprefix_q=user
 ```
 
